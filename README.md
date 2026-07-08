@@ -1,162 +1,202 @@
-# AI-Powered LinkedIn Content Automation
+# 🚀 AI-Powered LinkedIn Content Automation
 
-An intelligent workflow automation built with **n8n** that transforms PDF documents into professional, AI-generated LinkedIn-ready posts. The workflow automates document processing, text extraction, and content generation using Large Language Models (LLMs), reducing manual effort in creating engaging social media content.
+An end-to-end workflow automation built using **n8n** to streamline LinkedIn content creation from PDF documents. The workflow eliminates the manual process of reading PDF documents, extracting relevant information, generating AI-powered content, and preparing it for publishing.
 
----
-
-## Features
-
-- 📄 Automated PDF text extraction
-- 🤖 AI-powered LinkedIn post generation
-- ✍️ Prompt-based content generation using LLMs
-- 🔄 End-to-end workflow automation with n8n
-- 📊 Google Sheets integration for workflow management
-- ⚙️ Modular and extensible workflow design
+This project was developed during my internship at **Konfluence Infotech LLP** to automate an internal content creation workflow.
 
 ---
 
-## Workflow
+## 📌 Problem Statement
 
-```
-PDF Input
-      │
-      ▼
-Read PDF
-      │
-      ▼
+The existing workflow required team members to:
+
+- 📄 Open PDF documents manually
+- 📖 Read and identify important content
+- ✍️ Write LinkedIn posts manually
+- 📋 Copy content into LinkedIn
+- 🚀 Publish the post
+
+This repetitive process was time-consuming and reduced productivity.
+
+---
+
+## 💡 Solution
+
+This workflow automates the majority of the content creation pipeline.
+
+The automation:
+
+- 📥 Reads PDF links from Google Sheets
+- 📄 Downloads PDF documents automatically
+- 🔍 Extracts textual content
+- 🤖 Uses Google Gemini AI to generate content
+- ✨ Formats the generated output
+- 📊 Updates Google Sheets automatically
+- ✅ Tracks processing status
+- 🔗 Includes a LinkedIn publishing node for complete workflow automation*
+
+---
+
+## ✨ Features
+
+- 📄 Automated PDF processing
+- 📊 Google Sheets integration
+- 🤖 AI-powered content generation
+- 📝 Prompt-driven workflow
+- ✅ Automatic status tracking
+- 🚫 Duplicate processing prevention
+- 🧩 Modular workflow architecture
+- ⚙️ Enterprise-ready automation design
+
+---
+
+## 🔄 Workflow
+
+```text
+Google Sheets
+        │
+        ▼
+Read PDF Link
+        │
+        ▼
+Download PDF
+        │
+        ▼
 Extract Text
-      │
-      ▼
-Generate LinkedIn Post using AI
-      │
-      ▼
-Store / Review Output
+        │
+        ▼
+Generate Content using Gemini AI
+        │
+        ▼
+Format Output
+        │
+        ▼
+Update Google Sheets
+        │
+        ▼
+Update Processing Status
+        │
+        ▼
+LinkedIn Publishing (Work in Progress)
 ```
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - n8n
 - Google Gemini API
-- Google Sheets
+- Google Sheets API
+- HTTP Request
 - PDF Processing
 - REST APIs
 - Workflow Automation
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
-```
-linkedin-content-automation/
-│
-├── linkedin-automation.json
+```text
+.
+├── LinkedIn Post Automation.json
 ├── README.md
 └── .gitignore
 ```
 
 ---
 
-## Prerequisites
+## ⚙️ Prerequisites
 
-Before running the workflow, ensure you have:
-
-- n8n installed (Cloud or Self-hosted)
-- Google Gemini API credentials
-- Google Sheets credentials
-- A Google Spreadsheet for managing workflow data
-
----
-
-## Installation
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/yourusername/linkedin-content-automation.git
-```
-
-### 2. Open n8n
-
-Start your n8n instance.
-
-### 3. Import the workflow
-
-Import the exported workflow file:
-
-```
-linkedin-automation.json
-```
-
-### 4. Configure Credentials
-
-Create the following credentials in n8n:
+Before running the workflow, configure the following credentials in n8n:
 
 - Google Sheets
 - Google Gemini API
 
-The workflow references n8n credentials only. No API keys are stored in this repository.
-
-### 5. Execute the Workflow
-
-Run the workflow and provide the required input document.
+🔒 The workflow uses n8n's encrypted credential management system. No API keys are stored in this repository.
 
 ---
 
-## Configuration
+## 🚀 Installation
 
-This project uses **n8n Credentials** for authentication.
+Clone the repository:
 
-Required credentials include:
+```bash
+git clone https://github.com/yourusername/ai-linkedin-content-automation.git
+```
 
-- Google Sheets Credentials
-- Google Gemini API Credentials
+### Import the Workflow
 
-Authentication is managed securely by n8n. Sensitive API keys and credentials are not included in this repository.
-
----
-
-## Use Cases
-
-- AI-assisted LinkedIn content creation
-- Document-to-social media content generation
-- Workflow automation
-- Personal branding
-- Content marketing
-- Enterprise content automation
+- Open your n8n instance.
+- Import `LinkedIn Post Automation.json`.
+- Configure the required credentials.
+- Execute the workflow.
 
 ---
 
-## Future Improvements
+## 📈 Current Status
 
-- Automatic LinkedIn publishing
-- Multi-platform social media support
-- Content scheduling
-- AI-generated image creation
-- Advanced prompt customization
-- Analytics and reporting dashboard
+### ✅ Completed
+
+- Google Sheets Integration
+- PDF Download
+- PDF Text Extraction
+- AI-powered Content Generation
+- JSON Parsing
+- Automated Formatting
+- Status Tracking
+- Google Sheets Updates
+
+### 🚧 In Progress
+
+- LinkedIn Post Publishing
+
+> **Note:** The LinkedIn publishing node is included in the workflow architecture but is currently not functional due to LinkedIn API access limitations. The generated content is successfully prepared and stored, making it ready for manual or future automated publishing.
 
 ---
 
-## Contributing
+## 🔮 Future Improvements
+
+- 🔗 Functional LinkedIn API integration
+- 🖼️ AI-generated images
+- 🌐 Multi-platform publishing
+- 📅 Content scheduling
+- 📊 Analytics dashboard
+- 📧 Email notifications
+
+---
+
+## 🎯 Skills Demonstrated
+
+- Workflow Automation
+- Generative AI Integration
+- API Integration
+- Prompt Engineering
+- PDF Processing
+- Google Workspace Automation
+- JSON Processing
+- Business Process Automation
+- Enterprise Workflow Design
+
+---
+
+## 🤝 Contributing
 
 Contributions, suggestions, and improvements are welcome.
 
-Feel free to fork the repository, open issues, or submit pull requests.
+Feel free to fork the repository, open an issue, or submit a pull request.
 
 ---
 
-## License
+## 📜 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
 
 ---
 
-## Author
+## 👨‍💻 Author
 
 **Niranjan Borse**
 
-LinkedIn: https://linkedin.com/in/niranjan-borse-8449a924a
+🔗 LinkedIn: https://linkedin.com/in/niranjan-borse-8449a924a
 
-GitHub: https://github.com/NiranjanBorse1
+💻 GitHub: https://github.com/NiranjanBorse1
