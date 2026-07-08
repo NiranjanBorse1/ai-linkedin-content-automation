@@ -1,0 +1,985 @@
+{
+  "name": "LinkedIn Post Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9eacfbb6-74c1-4a47-815c-50295a9fa2f9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a079dd79-b81e-47fe-a41d-4c556f6edc58",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "YOUR_GOOGLE_SERVICE_ACCOUNT_CREDENTIAL_ID",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$json.pdf_link}}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1120,
+        -16
+      ],
+      "id": "9cb1b796-ba6d-4d6e-b025-a8c4e114fc93",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "pdf",
+        "options": {
+          "joinPages": true,
+          "maxPages": 5
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        -16
+      ],
+      "id": "8a34a8eb-d8e4-44c0-8272-8f731c29f3f7",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "status": "={{ $json.post_type === 'image' ? 'image generated' : 'text generated' }}",
+            "processed": "true"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "pdf_link",
+              "displayName": "pdf_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed",
+              "displayName": "processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4032,
+        0
+      ],
+      "id": "176577b4-ef1d-4cc2-9d07-cdd1738c1479",
+      "name": "final update for status",
+      "credentials": {
+        "googleApi": {
+          "id": "YOUR_GOOGLE_SERVICE_ACCOUNT_CREDENTIAL_ID",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7e6adc09-8e5b-4fc6-a54e-a923fecdacb3",
+              "name": "=id",
+              "value": "={{ $json.id }}\n",
+              "type": "number"
+            },
+            {
+              "id": "ae9b5685-1c30-4b22-b011-074efaaabc85",
+              "name": "=post_type",
+              "value": "={{ $json.post_type.trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "3a1bf479-f798-46df-b293-faf2ec0bb21e",
+              "name": "row_number",
+              "value": "={{ $json.row_number }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "97400d8a-5133-4fbc-b985-80d913a4bf73",
+      "name": "Lock row identity"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ae4285a-e6ce-44f9-9841-7afba288ce24",
+              "name": "=notepad_mcq",
+              "value": "={{ \n  \"MCQ:\\n\\n\" +\n  $json.formatted_text.trim()\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3552,
+        0
+      ],
+      "id": "f2a2be4d-f15e-4e79-acc9-001771c59056",
+      "name": "Notepad_Text"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "notepad_mcq",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3776,
+        0
+      ],
+      "id": "a35600c7-c952-4486-ab74-d28a4512d10d",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2ad04b7c-5ba4-4730-b975-b77c3f1f4b17",
+              "name": "clean_json",
+              "value": "={{\n  $json.content.parts[0].text\n    .replace(/```json/g, '')\n    .replace(/```/g, '')\n    .replace(/\\\\n/g, '')\n    .replace(/\\\\\"/g, '\"')\n    .trim()\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2256,
+        0
+      ],
+      "id": "b3498b77-1436-4fee-8619-deb6a8e1f619",
+      "name": "clean_json"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e3f5812-b448-4cc5-acc0-f7a6ff4829b4",
+              "name": "=parsed",
+              "value": "={{ JSON.parse($json.clean_json) }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2448,
+        0
+      ],
+      "id": "f17ceead-c63e-4918-a9a4-92bdd0f61269",
+      "name": "json_parse"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b983eea9-eafc-4d4d-8298-13a0ffef6f76",
+              "name": "question",
+              "value": "={{ $json.parsed.question }}",
+              "type": "string"
+            },
+            {
+              "id": "87aae4fe-70ee-4c76-abb6-ec47884fcb25",
+              "name": "=correct_answer",
+              "value": "={{ $json.parsed.options[$json.parsed.answer] }}",
+              "type": "string"
+            },
+            {
+              "id": "79457948-bf3d-4a54-a574-2a1ffa926e89",
+              "name": "formatted_text",
+              "value": "={{ `📘 MCQ  Q: ${$json.parsed.question}  A) ${$json.parsed.options.A} B) ${$json.parsed.options.B} C) ${$json.parsed.options.C} D) ${$json.parsed.options.D}  \nCorrect Answer: ${$json.parsed.answer} (${ $json.parsed.options[$json.parsed.answer] }) ` }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2624,
+        0
+      ],
+      "id": "43c308e8-98e7-41cd-9344-bd61317bc72d",
+      "name": "json_parse1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be6fb2d5-01ed-45d8-963f-646c482f029a",
+              "name": "=question_part",
+              "value": "={{ $json.formatted_text }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2800,
+        0
+      ],
+      "id": "9a9280bc-600e-4f36-82a1-303fd5100a96",
+      "name": "Formatting_Node"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f59c70c-3e58-447b-968a-7966ff469eff",
+              "name": "formatted_text",
+              "value": "={{\n(() => {\n  const t = $json.question_part || $json.final_text || '';\n\n  return t\n    .replace(/^Python MCQ\\s*:/i, '📘 Python MCQ:\\n\\n')\n    .replace(/\\s+A\\)/g, '\\n\\nA)')\n    .replace(/\\s+B\\)/g, '\\nB)')\n    .replace(/\\s+C\\)/g, '\\nC)')\n    .replace(/\\s+D\\)/g, '\\nD)')\n    .replace(/\\s+Correct Answer:/i, '\\n\\n✅ Correct Answer:');\n})()\n}}\n",
+              "type": "string"
+            },
+            {
+              "id": "7b4d83f8-8c3b-4305-9084-a2ab9e1aec34",
+              "name": "=id",
+              "value": "={{$node[\"Get row(s) in sheet\"].json.id}}\n",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2960,
+        0
+      ],
+      "id": "bed2bfae-a745-4231-9a60-830f5fe31015",
+      "name": "Final_Json"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a254d7c6-f21d-489f-b56f-05fd04f76000",
+              "leftValue": "={{$json.pdf_link}}",
+              "rightValue": "http",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ddf8dcb7-84ae-4929-ad9b-03b7f9c526cb",
+              "leftValue": "={{$json.pdf_link}}",
+              "rightValue": ".pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        -16
+      ],
+      "id": "4beafe4e-12e9-46dc-a2ec-51e22381e9f0",
+      "name": "If pdf link"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "184c7a99-3cd4-4554-b12f-579d2af754c2",
+              "leftValue": "={{$json.processed}}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        0
+      ],
+      "id": "e25c9508-73e2-47b0-9a63-6d4e02021e6a",
+      "name": "If processed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "498d56a8-4086-4b98-affd-7375c8487dd2",
+              "name": "=content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        848,
+        272
+      ],
+      "id": "849c1ffd-ac7c-497b-98f5-38088a4b71fc",
+      "name": "Edit Field (B)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "181a3912-5908-4499-b7ef-81d0c978b861",
+              "name": "content",
+              "value": "={{$json.text.slice(0, 2000)}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1616,
+        -576
+      ],
+      "id": "537c0aaf-d079-4c85-abf4-2a54c370bd07",
+      "name": "Edit Field (A)"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "processed": "true",
+            "id": "={{$json.id}}",
+            "content": "={{$json.content}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "pdf_link",
+              "displayName": "pdf_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed",
+              "displayName": "processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3360,
+        0
+      ],
+      "id": "d03ef235-841f-4c04-9b8a-157de81c13d1",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "YOUR_GOOGLE_SERVICE_ACCOUNT_CREDENTIAL_ID",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d1fde1c-359f-484c-b935-b9abbac927d5",
+              "name": "=content",
+              "value": "={{$json.formatted_text}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3168,
+        0
+      ],
+      "id": "02caac00-569b-4833-8755-13a360ad8491",
+      "name": "Content"
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        4320,
+        0
+      ],
+      "id": "9654fc41-b4d5-4638-8ce8-ad369b4c212a",
+      "name": "Create a post"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an educator.\n\nFrom the following study material, create exactly ONE multiple-choice question.\nstart from page page No-6\nRules:\n- 1 question only\n- 4 options labeled A, B, C, D\n- Only ONE correct answer\n- Difficulty: medium\n- Base it strictly on the content\n\nReturn STRICT JSON ONLY in this format:\n{\n  \"question\": \"\",\n  \"options\": {\n    \"A\": \"\",\n    \"B\": \"\",\n    \"C\": \"\",\n    \"D\": \"\"\n  },\n  \"answer\": \"\"\n}\n\nStudy material:\n{{ $json.content }}\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1888,
+        0
+      ],
+      "id": "16b0590f-6dec-44fc-8892-270394c3d281",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GEMINI_API_CREDENTIAL_ID",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Lock row identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Field (A)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lock row identity": {
+      "main": [
+        [
+          {
+            "node": "If processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notepad_Text": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        []
+      ]
+    },
+    "clean_json": {
+      "main": [
+        [
+          {
+            "node": "json_parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "json_parse": {
+      "main": [
+        [
+          {
+            "node": "json_parse1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "json_parse1": {
+      "main": [
+        [
+          {
+            "node": "Formatting_Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatting_Node": {
+      "main": [
+        [
+          {
+            "node": "Final_Json",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "final update for status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final_Json": {
+      "main": [
+        [
+          {
+            "node": "Notepad_Text",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If pdf link": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If processed": {
+      "main": [
+        [
+          {
+            "node": "If pdf link",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Field (B)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Field (A)": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Field (B)": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "final update for status": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "clean_json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "errorWorkflow": ""
+  },
+  "versionId": "91990e0d-555e-48b3-b6f6-a529fe6b88ad",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
+  },
+  "id": "-ncuW7Z4MW9UQNUrLp_Mq",
+  "tags": []
+}

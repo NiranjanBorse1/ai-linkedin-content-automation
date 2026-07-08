@@ -1,0 +1,16 @@
+.env
+.env.local
+.env.*.local
+
+# Google Service Account key files - contain sensitive credentials
+credentials/
+*.json.key
+service-account*.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
